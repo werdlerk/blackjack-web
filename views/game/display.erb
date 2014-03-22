@@ -1,0 +1,52 @@
+<% if !@error %>
+  <p>&nbsp;</p>
+<% end %>
+
+<div class="well text-center">
+  <h3 class="float-left">
+    Dealer
+  </h3>
+
+  <h3 class="float-right">
+     <%= has_hidden_card(session[:dealer_cards]) ? '' : cards_value(session[:dealer_cards]) %>
+  </h3>
+  <p>
+    <% session[:dealer_cards].each do |card| %>
+      <img src="<%= card_filename(card) %>" title="<%= card_title(card) %>" />
+    <% end %>
+  </p>
+</div>
+
+<div class="well text-center">
+  <h3 class="float-left">
+    <%= session[:playername] %>
+  </h3>
+  <h3 class="float-right">
+    <%= cards_value(session[:player_cards]) %>
+  </h3>
+  <p>
+    <% session[:player_cards].each do |card| %>
+      <img src="<%= card_filename(card) %>" title="<%= card_title(card) %>" />
+    <% end %>
+  </p>
+</div>
+
+<div class="text-center">
+  <form method="post">
+    <p>
+      <% if session[:state] == :player %>
+        <small>What would you like to do?</small>
+      <% end %>&nbsp;
+    </p>
+    
+    <p>
+      <% if session[:state] == :player %>
+        <input type="submit" class="btn btn-large btn-warning" name="action" value="Hit" />
+        &nbsp; &nbsp;
+        <input type="submit" class="btn btn-large btn-success" name="action" value="Stay" />
+      <% elsif session[:state] == :dealer %>
+        <input type="submit" class="btn btn-large btn-primary" name="action" value="Dealer's turn" />
+      <% end %>
+    </p>
+  </form>
+</div>

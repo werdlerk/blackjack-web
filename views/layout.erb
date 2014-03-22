@@ -1,17 +1,34 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My First App</title>
-    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/application.css">
+    <meta charset="utf-8" />
+    <title>Blackjack</title>
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/application.css" />
+    <script language="javascript" type="text/javascript" src="/vendor/bootstrap/js/jquery-1.11.0.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <style type="text/css">
+      .float-left {
+        float: left;
+      }
+      .float-right {
+        float: right;
+      }
+      p {
+        clear: both;
+      }
+    </style>
+
   </head>
   <body style="padding-top: 50px;">
 
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
+            <a class="brand">Blackjack</a>
             <ul class="nav">
-              <li><a href="/">Nav Item</a></li>
+              <li <%= request.path == "/"      ? "class=\"active\"" : "" %>><a href="/">Home</a></li>
+              <li <%= request.path == "/start" ? "class=\"active\"" : "" %>><a href="/start">Start</a></li>
             </ul>
         </div>
       </div>
@@ -23,5 +40,7 @@
     <% end %>
       <%= yield %>
   </div>
+
+    
   </body>
 </html>
