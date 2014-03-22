@@ -92,3 +92,7 @@ def reset_game
   session[:deck] = []
   session[:state] = nil
 end
+
+def play_again
+  "  <a href='/start' class='float-right'>Play again</a>"
+end

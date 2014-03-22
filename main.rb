@@ -34,6 +34,10 @@ post '/playername' do
 end
 
 get '/get_ready' do
+  if session[:deck]
+    redirect '/game'
+  end
+  
   percentage = 0
   if session[:getready]
     percentage = session[:getready]
@@ -56,6 +60,15 @@ get '/game' do
     session[:state] = :player
   end
 
+  if cards_value(session[:dealer_cards]) == 21
+    session[:state] = :dealer_blackjack
+    @alert_error = "Dealer has backjack, you've lost!!" + play_again
+
+  elsif cards_value(session[:player_cards]) == 21
+    session[:state] = :player_blackjack
+    @alert_success = "You've blackjack, you win!!" + play_again
+  end
+
   erb :'game/display'
 end
 
@@ -65,7 +78,7 @@ post '/game' do
 
     if cards_value(session[:player_cards]) > 21
       session[:state] = :player_busted
-      @error = "Game over! You've busted!"
+      @alert_error = "Game over! You've busted!" + play_again
     end
 
   elsif params['action'] == 'Stay'
@@ -78,24 +91,20 @@ post '/game' do
 
     elsif cards_value(session[:player_cards]) > cards_value(session[:dealer_cards])
       session[:state] = :player_wins
-      @error = "You win!"
+      @alert_success = "You win!" + play_again
     elsif cards_value(session[:player_cards]) < cards_value(session[:dealer_cards])
       session[:state] = :dealer_wins
-      @error = "Too bad, dealer wins!"
+      @alert_error = "Too bad, dealer wins!" + play_again
     else cards_value(session[:player_cards]) == cards_value(session[:dealer_cards])
       session[:state] = :result_tie
-      @error = "Game ends in a tie! "
+      @alert_info = "Game ends in a tie! " + play_again
     end
 
     if session[:state] == :dealer && cards_value(session[:dealer_cards]) > 21
       session[:state] = :dealer_busted
-      @error = "Dealer busted! You win!"
+      @alert_success = "Dealer busted! You win!" + play_again
     end
 
-  end
-
-  if @error && @error.length > 0
-    @error += "  <a href='/start' class='float-right'>Play again</a>"
   end
 
   erb :'game/display'

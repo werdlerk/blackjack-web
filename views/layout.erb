@@ -35,10 +35,15 @@
     </div>
 
   <div class="container">
-    <%if @error %>
-      <div class="alert alert-error"><%=@error%></div>
+    <%if @alert_error %>
+      <div class="alert alert-error"><%= @alert_error %></div>
+    <% elsif @alert_success %>
+      <div class="alert alert-success"><%= @alert_success %></div>
+    <% elsif @alert_info %>
+      <div class="alert alert-info"><%= @alert_info %></div>
     <% end %>
-      <%= yield %>
+
+    <%= yield %>
   </div>
 
     
