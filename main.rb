@@ -34,10 +34,10 @@ post '/playername' do
 end
 
 get '/get_ready' do
-  if session[:deck]
+  if session[:skip_get_ready]
     redirect '/game'
   end
-  
+
   percentage = 0
   if session[:getready]
     percentage = session[:getready]
@@ -58,6 +58,7 @@ get '/game' do
     build_deck
     setup
     session[:state] = :player
+    session[:skip_get_ready] = true
   end
 
   if cards_value(session[:dealer_cards]) == 21
