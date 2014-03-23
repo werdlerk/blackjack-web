@@ -12,7 +12,7 @@
   </h3>
   <p>
     <% session[:dealer_cards].each do |card| %>
-      <img src="<%= card_filename(card) %>" title="<%= card_title(card) %>" />
+      <img class="card" src="<%= card_filename(card) %>" title="<%= card_title(card) %>" />
     <% end %>
   </p>
 </div>
@@ -26,23 +26,20 @@
   </h3>
   <p>
     <% session[:player_cards].each do |card| %>
-      <img src="<%= card_filename(card) %>" title="<%= card_title(card) %>" />
+      <img class="card" src="<%= card_filename(card) %>" title="<%= card_title(card) %>" />
     <% end %>
   </p>
 </div>
 
 <div class="text-center">
-  <form method="post">
-    <p>
-      <% if session[:state] == :player %>
-        <small>What would you like to do?</small>
-      <% end %>&nbsp;
-    </p>
+  <form method="post" id="action_form">
+    <% if session[:state] == :player %>
+      <p><small>What would you like to do?</small></p>
+    <% end %>
     
     <p>
       <% if session[:state] == :player %>
         <input type="submit" class="btn btn-large btn-warning" name="action" value="Hit" />
-        &nbsp; &nbsp;
         <input type="submit" class="btn btn-large btn-success" name="action" value="Stay" />
       <% elsif session[:state] == :dealer %>
         <input type="submit" class="btn btn-large btn-primary" name="action" value="Dealer's turn" />
@@ -50,3 +47,5 @@
     </p>
   </form>
 </div>
+
+<h4></h4>

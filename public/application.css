@@ -1,0 +1,18 @@
+.float-left {
+  float: left;
+}
+.float-right {
+  float: right;
+}
+p {
+  clear: both;
+}
+
+/* Space on the right of the 'Hit' button */
+form#action_form input:first-child {
+  margin-right:10px;
+}
+
+img.card {
+  margin-right:5px;
+}

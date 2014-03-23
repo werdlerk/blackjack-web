@@ -4,9 +4,19 @@ require 'pry'
 require './helpers'
 
 set :sessions, true
-set :session_secret, 'Woof Woof!'
+set :session_secret, 'Codefish.org\'s secret'
 
 CARD_VALUE_TO_WORD = { 2 => "two", 3 => "three", 4 => "four", 5 => "five", 6 => "six", 7 => "seven", 8 => "eight", 9 => "nine", 10 => "ten" }
+
+helpers do
+  def helper_method()
+    puts 'this is a helper method'
+  end
+end
+
+before do
+  # puts 'this code is run before every other get/post below'
+end
 
 get '/' do
   erb :index
@@ -28,6 +38,11 @@ get '/start' do
 end
 
 post '/playername' do
+  if params[:playername].empty? 
+    @alert_error = "Please enter a valid name. I'm sure you have one :-)"
+    halt erb :'preparation/playername'
+  end
+
   set_playername(params[:playername], params[:remember_name])
 
   redirect '/get_ready'
