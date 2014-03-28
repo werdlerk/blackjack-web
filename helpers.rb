@@ -15,7 +15,7 @@ helpers do
 
   def build_deck
     cards = []
-    amount_decks = 1
+    amount_decks = AMOUNT_DECKS
     
     # For each amount_decks, create the deck using an array of suits and an array of values
     amount_decks.times do
@@ -63,7 +63,7 @@ helpers do
 
     # Take into account any aces if the total value is higher then 21
     cards.select{ |card| card[:value] == 'ace' }.count.times do
-      total_points -= 10 if total_points > 21
+      total_points -= 10 if total_points > BLACKJACK_AMOUNT
     end
 
     total_points
@@ -100,7 +100,7 @@ helpers do
   def reset_game
     reset_round
     session[:state] = nil
-    session[:player_money] = 100
+    session[:player_money] = INITIAL_PLAYER_MONEY
     session[:player_bet] = nil
   end
 

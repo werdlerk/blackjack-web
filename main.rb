@@ -8,16 +8,10 @@ set :sessions, true
 set :session_secret, 'Codefish.org\'s secret'
 
 CARD_VALUE_TO_WORD = { 2 => "two", 3 => "three", 4 => "four", 5 => "five", 6 => "six", 7 => "seven", 8 => "eight", 9 => "nine", 10 => "ten" }
-
-helpers do
-  def helper_method()
-    puts 'this is a helper method'
-  end
-end
-
-before do
-  # puts 'this code is run before every other get/post below'
-end
+BLACKJACK_AMOUNT = 21
+DEALER_HIT_AMOUNT = 17
+INITIAL_PLAYER_MONEY = 100
+AMOUNT_DECKS = 1
 
 get '/' do
   remove_game
@@ -90,12 +84,12 @@ end
 post '/ajax/game' do
 
   # Check for blackjacks
-  if session[:dealer_cards].size == 2 && cards_value(session[:dealer_cards]) == 21
+  if session[:dealer_cards].size == 2 && cards_value(session[:dealer_cards]) == BLACKJACK_AMOUNT
     show_all_cards(session[:dealer_cards])
     session[:state] = :player_lost
     @alert_error = "Dealer has backjack, you've lost!!" + play_again
 
-  elsif session[:player_cards].size == 2 && cards_value(session[:player_cards]) == 21
+  elsif session[:player_cards].size == 2 && cards_value(session[:player_cards]) == BLACKJACK_AMOUNT
     session[:state] = :player_win
     @alert_success = "You've blackjack, you win!!" + play_again
   end
@@ -103,7 +97,7 @@ post '/ajax/game' do
   if params['action'].downcase == 'hit'
     session[:player_cards] << session[:deck].pop
 
-    if cards_value(session[:player_cards]) > 21
+    if cards_value(session[:player_cards]) > BLACKJACK_AMOUNT
       session[:state] = :player_lost
       @alert_error = "Game over! You've busted!" + play_again
     end
@@ -114,7 +108,7 @@ post '/ajax/game' do
     show_all_cards(session[:dealer_cards])
 
   elsif params['action'].downcase == 'dealer'
-    if cards_value(session[:dealer_cards]) < 17
+    if cards_value(session[:dealer_cards]) < DEALER_HIT_AMOUNT
       session[:dealer_cards] << session[:deck].pop
 
     elsif cards_value(session[:player_cards]) > cards_value(session[:dealer_cards])
@@ -130,7 +124,7 @@ post '/ajax/game' do
       @alert_info = "Game ends in a tie! " + play_again
     end
 
-    if session[:state] == :dealer && cards_value(session[:dealer_cards]) > 21
+    if session[:state] == :dealer && cards_value(session[:dealer_cards]) > BLACKJACK_AMOUNT
       session[:state] = :player_win
       @alert_success = "Dealer busted! You win!" + play_again
     end
