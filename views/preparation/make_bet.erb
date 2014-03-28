@@ -1,0 +1,28 @@
+<p>&nbsp;</p>
+
+<form class="form-horizontal" method="post">
+  <div class="control-group">
+    <div class="controls">
+      <p class="lead">
+        Welcome <%=session[:playername]%>,
+      </p>
+      <p class="lead">
+        You have to make a bet in order to play.<br/>
+        Please enter an amount of money to bet.
+      </p>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <div class="input-prepend input-append">
+        <span class="add-on">$</span>
+        <input type="number" name="bet_amount" min="5" max="<%=session[:player_money]%>" value="<%=session[:player_bet]%>" autofocus />
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-primary">Bet</button>
+    </div>
+  </div>
+</form>

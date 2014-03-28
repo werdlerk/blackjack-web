@@ -1,6 +1,29 @@
+<script language="javascript" type="text/javascript" src="/display.js"></script>
+
 <% if !@alert_error && !@alert_success && !@alert_info %>
   <p>&nbsp;</p>
 <% end %>
+
+<!-- <div id="make_bet" class="modal hide fade">
+  <div class="modal-header">
+    <h3>Make a bet</h3>
+  </div>
+  <div class="modal-body">
+    <form method="post" action="/make_bet">
+
+      <span class="help-block">
+        You need to make a bet in order to play. Minimum bet is $5.<br/>
+        You have $<%=session[:player_money]%> left.
+      </span>
+
+      <label>Bet amount</label>
+      <input id="bet_amount" type="number" name="amount" value="50" max="<%=session[:player_money]%>" min="5" step="1" />
+    </form>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-primary">Make bet</a>
+  </div>
+</div> -->
 
 <div class="well text-center">
   <h3 class="float-left">
@@ -16,6 +39,10 @@
     <% end %>
   </p>
 </div>
+
+<!-- <div class="well text-center">
+  <small>Bet:</small><h3>$<%=session[:player_bet]%></h3>
+</div> -->
 
 <div class="well text-center">
   <h3 class="float-left">
@@ -47,5 +74,3 @@
     </p>
   </form>
 </div>
-
-<h4></h4>

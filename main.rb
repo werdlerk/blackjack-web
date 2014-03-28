@@ -19,6 +19,7 @@ before do
 end
 
 get '/' do
+  remove_game
   erb :index
 end
 
@@ -31,7 +32,7 @@ get '/start' do
   reset_game
 
   if session[:playername_persistent]
-    redirect '/get_ready'
+    redirect '/make_bet'
   end
 
   erb :'preparation/playername'
@@ -45,26 +46,33 @@ post '/playername' do
 
   set_playername(params[:playername], params[:remember_name])
 
-  redirect '/get_ready'
+  redirect '/make_bet'
 end
 
-get '/get_ready' do
-  if session[:skip_get_ready]
-    redirect '/game'
-  end
-
-  percentage = 0
-  if session[:getready]
-    percentage = session[:getready]
-  end
-
-  if percentage >= 100
-    redirect '/game'
+get '/make_bet' do
+  reset_round
+  if session[:player_money] > 0
+    erb :'preparation/make_bet'
   else
-    session[:getready] = (percentage += 20)
-    erb :'preparation/getready'
+    erb :'game/game_over'
   end
+end
 
+post '/make_bet' do
+  if params['bet_amount'].empty? || params['bet_amount'].to_i <= 0
+    @alert_error = "Illegal amount entered. Please enter a valid number."
+    erb :'preparation/make_bet'
+
+  elsif params['bet_amount'].to_i > session[:player_money]
+    @alert_error = "I'm sorry, you don't have this much money to bet. Specify a lower amount."
+    erb :'preparation/make_bet'
+
+  else 
+    session[:player_bet] = params['bet_amount'].to_i
+    session[:player_money] -= session[:player_bet]
+    
+    redirect '/game'
+  end
 end
 
 
@@ -87,6 +95,7 @@ get '/game' do
 
   erb :'game/display'
 end
+
 
 post '/game' do
   if params['action'] == 'Hit'
@@ -121,6 +130,16 @@ post '/game' do
       @alert_success = "Dealer busted! You win!" + play_again
     end
 
+  end
+
+  if [:player_wins, :dealer_wins, :result_tie, :dealer_busted, :player_busted].include? session[:state]
+    if [:dealer_busted, :player_wins].include? session[:state]
+      session[:player_money] += (2*session[:player_bet])
+    elsif [:result_tie].include? session[:state]
+      session[:player_money] += session[:player_bet]
+    end
+
+    session[:player_bet] = nil
   end
 
   erb :'game/display'
