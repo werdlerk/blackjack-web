@@ -22,4 +22,6 @@ div.cards img.card {
   margin: 5px;
   border: 1px solid #8F8D8D;
   border-radius: 5px;
+  padding:2px;
+  background-color:white;
 }

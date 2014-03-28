@@ -19,8 +19,6 @@
     <% if session[:state] == :player %>
       <input type="submit" class="btn btn-large btn-warning" name="action" value="Hit" id="hit" />
       <input type="submit" class="btn btn-large btn-success" name="action" value="Stay" id="stay" />
-    <% elsif session[:state] == :dealer %>
-      <input type="submit" class="btn btn-large btn-primary" name="action" value="Dealer's turn" />
     <% end %>
     </p>
 </div>

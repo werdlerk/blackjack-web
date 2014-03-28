@@ -38,11 +38,11 @@ function handleGameData(gamedata) {
     $("#alert-spacing").remove();
 
     if (gamedata.error != null)
-      $("body > .container").prepend( "<div class='alert alert-error'>" + gamedata.error + "</div>");
+      $("#content").prepend( "<div class='alert alert-error'>" + gamedata.error + "</div>");
     if (gamedata.success != null) 
-      $("body > .container").prepend( "<div class='alert alert-success'>" + gamedata.success + "</div>");
+      $("#content").prepend( "<div class='alert alert-success'>" + gamedata.success + "</div>");
     if (gamedata.info != null)
-      $("body > .container").prepend( "<div class='alert alert-info'>" + gamedata.info + "</div>");
+      $("#content").prepend( "<div class='alert alert-info'>" + gamedata.info + "</div>");
   }
 
 }

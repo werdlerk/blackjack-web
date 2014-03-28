@@ -4,70 +4,71 @@
     <meta charset="utf-8" />
     <title>Blackjack</title>
     <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/vendor/bootstrap/css/sticky-footer.css" />
     <link rel="stylesheet" href="/application.css" />
     <script language="javascript" type="text/javascript" src="/vendor/bootstrap/js/jquery-1.11.0.min.js"></script>
     <script language="javascript" type="text/javascript" src="/vendor/bootstrap/js/bootstrap.min.js"></script>
   </head>
-  <body style="padding-top: 50px;">
+  <body>
 
-    <div id="promptBet" class="modal hide fade">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Are you sure?</h3>
-      </div>
-      <div class="modal-body">
-        <p>If you change your bet now, you'll lose your current bet.<br/>
-          Are you sure you want to do this?</p>
-      </div>
-      <div class="modal-footer">
-        <a href="/make_bet" class="btn btn-primary">Change bet</a>
-        <a href="#promptBet" class="btn" data-dismiss="modal">Close</a>
-      </div>
-    </div>
-
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-            <a class="brand">Blackjack</a>
-            <ul class="nav">
-              <li <%= request.path == "/"      ? "class=\"active\"" : "" %>><a href="/"><i class="icon-home"></i> Home</a></li>
-              <li <%= request.path == "/start" ? "class=\"active\"" : "" %>><a href="/start" title="Start"><i class="icon-star" ></i> Start</a></li>
-            </ul>
-
-            <% if session[:player_money] %>
-                <a class="btn pull-right" title="Money left" style="cursor:default;">Money: $ <%= session[:player_money] %> </a> 
-            <% end %>
-
-            <% if session[:player_bet] %>
-              <a href="#promptBet" class="btn btn-warning pull-right" title="Change bet" style="margin-right: 10px;" data-toggle="modal">Bet: $ <%= session[:player_bet] %></a>
-            <% end %>
-            
-
-            <!-- <form class="navbar-form pull-right">
-              <span id="current_bet">
-                Current bet: 
-                <strong>
-                  $<%= session[:player_bet] ? session[:player_bet] : 0 %>
-                </strong>
-              </span>
-              <a href="#" class="btn">Change</a>
-            </form> -->
-
+    <div id="wrap">
+      <div id="promptBet" class="modal hide fade">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3>Are you sure?</h3>
+        </div>
+        <div class="modal-body">
+          <p>If you change your bet now, you'll lose your current bet.<br/>
+            Are you sure you want to do this?</p>
+        </div>
+        <div class="modal-footer">
+          <a href="/make_bet" class="btn btn-primary">Change bet</a>
+          <a href="#promptBet" class="btn" data-dismiss="modal">Close</a>
         </div>
       </div>
+
+      <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+          <div class="container">
+              <a class="brand">Blackjack</a>
+              <ul class="nav">
+                <li <%= request.path == "/"      ? "class=\"active\"" : "" %>><a href="/"><i class="icon-home"></i> Home</a></li>
+                <li <%= request.path == "/start" ? "class=\"active\"" : "" %>><a href="/start" title="Start"><i class="icon-star" ></i> Start</a></li>
+              </ul>
+
+              <% if session[:player_money] %>
+                  <a class="btn pull-right" title="Money left" style="cursor:default;">Money: $ <%= session[:player_money] %> </a> 
+              <% end %>
+
+              <% if session[:player_bet] %>
+                <a href="#promptBet" class="btn btn-warning pull-right" title="Change bet" style="margin-right: 10px;" data-toggle="modal">Bet: $ <%= session[:player_bet] %></a>
+              <% end %>
+          </div>
+        </div>
+      </div>
+
+    <div id="content" class="container">
+      <%if @alert_error %>
+        <div class="alert alert-error"><%= @alert_error %></div>
+      <% elsif @alert_success %>
+        <div class="alert alert-success"><%= @alert_success %></div>
+      <% elsif @alert_info %>
+        <div class="alert alert-info"><%= @alert_info %></div>
+      <% end %>
+
+      <%= yield %>
     </div>
 
-  <div class="container">
-    <%if @alert_error %>
-      <div class="alert alert-error"><%= @alert_error %></div>
-    <% elsif @alert_success %>
-      <div class="alert alert-success"><%= @alert_success %></div>
-    <% elsif @alert_info %>
-      <div class="alert alert-info"><%= @alert_info %></div>
-    <% end %>
-
-    <%= yield %>
+    <div id="push"></div>
   </div>
+
+  <div id="footer">
+    <div class="container">
+      <p class="muted credit">Simple Blackjack game by <a href="http://www.codefish.org">Codefish</a> </p>
+    </div>
+  </div>
+
+
 
     
   </body>
