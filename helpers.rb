@@ -69,6 +69,10 @@ helpers do
     total_points
   end
 
+  def show_all_cards(cards)
+    cards.each {|card| card[:hidden] = false}
+  end
+
   def card_filename(card)
     base_path = '/images/cards'
     if card[:hidden]

@@ -1,76 +1,26 @@
 <script language="javascript" type="text/javascript" src="/display.js"></script>
 
-<% if !@alert_error && !@alert_success && !@alert_info %>
-  <p>&nbsp;</p>
-<% end %>
+<p id="alert-spacing">&nbsp;</p>
 
-<!-- <div id="make_bet" class="modal hide fade">
-  <div class="modal-header">
-    <h3>Make a bet</h3>
-  </div>
-  <div class="modal-body">
-    <form method="post" action="/make_bet">
-
-      <span class="help-block">
-        You need to make a bet in order to play. Minimum bet is $5.<br/>
-        You have $<%=session[:player_money]%> left.
-      </span>
-
-      <label>Bet amount</label>
-      <input id="bet_amount" type="number" name="amount" value="50" max="<%=session[:player_money]%>" min="5" step="1" />
-    </form>
-  </div>
-  <div class="modal-footer">
-    <a href="#" class="btn btn-primary">Make bet</a>
-  </div>
-</div> -->
-
-<div class="well text-center">
-  <h3 class="float-left">
-    Dealer
-  </h3>
-
-  <h3 class="float-right">
-     <%= has_hidden_card(session[:dealer_cards]) ? '' : cards_value(session[:dealer_cards]) %>
-  </h3>
-  <p>
-    <% session[:dealer_cards].each do |card| %>
-      <img class="card" src="<%= card_filename(card) %>" title="<%= card_title(card) %>" />
-    <% end %>
-  </p>
+<div id="dealer_cards" class="well well-small text-center cards">
+  Please wait...
 </div>
 
-<!-- <div class="well text-center">
-  <small>Bet:</small><h3>$<%=session[:player_bet]%></h3>
-</div> -->
-
-<div class="well text-center">
-  <h3 class="float-left">
-    <%= session[:playername] %>
-  </h3>
-  <h3 class="float-right">
-    <%= cards_value(session[:player_cards]) %>
-  </h3>
-  <p>
-    <% session[:player_cards].each do |card| %>
-      <img class="card" src="<%= card_filename(card) %>" title="<%= card_title(card) %>" />
-    <% end %>
-  </p>
+<div id="player_cards" class="well well-small text-center cards">
+  Please wait...
 </div>
 
-<div class="text-center">
-  <form method="post" id="action_form">
+<div id="action_buttons" class="text-center">
     <% if session[:state] == :player %>
       <p><small>What would you like to do?</small></p>
     <% end %>
     
     <p>
-      <% if session[:state] == :player %>
-        <input type="submit" class="btn btn-large btn-warning" name="action" value="Hit" />
-        <input type="submit" class="btn btn-large btn-success" name="action" value="Stay" />
-      <% elsif session[:state] == :dealer %>
-        <input type="submit" class="btn btn-large btn-primary" name="action" value="Dealer's turn" />
-      <% end %>
+    <% if session[:state] == :player %>
+      <input type="submit" class="btn btn-large btn-warning" name="action" value="Hit" id="hit" />
+      <input type="submit" class="btn btn-large btn-success" name="action" value="Stay" id="stay" />
+    <% elsif session[:state] == :dealer %>
+      <input type="submit" class="btn btn-large btn-primary" name="action" value="Dealer's turn" />
+    <% end %>
     </p>
-  </form>
 </div>

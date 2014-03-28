@@ -1,0 +1,13 @@
+<div id="player_cards" class="well well-small text-center cards">
+  <h3 class="float-left">
+    <%= session[:playername] %>
+  </h3>
+  <h3 class="float-right">
+    <%= cards_value(session[:player_cards]) %>
+  </h3>
+  <p>
+    <% session[:player_cards].each do |card| %>
+      <img class="card" src="<%= card_filename(card) %>" title="<%= card_title(card) %>" />
+    <% end %>
+  </p>
+</div>

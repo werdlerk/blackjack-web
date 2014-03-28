@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'pry'
+require 'json'
 require './helpers'
 
 set :sessions, true
@@ -28,7 +29,6 @@ get '/player' do
 end
 
 get '/start' do
-  session[:getready] = 0
   reset_game
 
   if session[:playername_persistent]
@@ -64,7 +64,7 @@ post '/make_bet' do
     erb :'preparation/make_bet'
 
   elsif params['bet_amount'].to_i > session[:player_money]
-    @alert_error = "I'm sorry, you don't have this much money to bet. Specify a lower amount."
+    @alert_error = "I'm sorry, you don't have this much money to bet. Enter a lower amount."
     erb :'preparation/make_bet'
 
   else 
@@ -81,66 +81,83 @@ get '/game' do
     build_deck
     setup
     session[:state] = :player
-    session[:skip_get_ready] = true
-  end
-
-  if cards_value(session[:dealer_cards]) == 21
-    session[:state] = :dealer_blackjack
-    @alert_error = "Dealer has backjack, you've lost!!" + play_again
-
-  elsif cards_value(session[:player_cards]) == 21
-    session[:state] = :player_blackjack
-    @alert_success = "You've blackjack, you win!!" + play_again
   end
 
   erb :'game/display'
 end
 
 
-post '/game' do
-  if params['action'] == 'Hit'
+post '/ajax/game' do
+
+  # Check for blackjacks
+  if session[:dealer_cards].size == 2 && cards_value(session[:dealer_cards]) == 21
+    show_all_cards(session[:dealer_cards])
+    session[:state] = :player_lost
+    @alert_error = "Dealer has backjack, you've lost!!" + play_again
+
+  elsif session[:player_cards].size == 2 && cards_value(session[:player_cards]) == 21
+    session[:state] = :player_win
+    @alert_success = "You've blackjack, you win!!" + play_again
+  end
+
+  if params['action'].downcase == 'hit'
     session[:player_cards] << session[:deck].pop
 
     if cards_value(session[:player_cards]) > 21
-      session[:state] = :player_busted
+      session[:state] = :player_lost
       @alert_error = "Game over! You've busted!" + play_again
     end
 
-  elsif params['action'] == 'Stay'
+  elsif params['action'].downcase == 'stay'
     session[:state] = :dealer
-    session[:dealer_cards].each {|card| card[:hidden] = false}
+    # session[:dealer_cards].each {|card| card[:hidden] = false}
+    show_all_cards(session[:dealer_cards])
 
-  elsif params['action'] == 'Dealer\'s turn'
+  elsif params['action'].downcase == 'dealer'
     if cards_value(session[:dealer_cards]) < 17
       session[:dealer_cards] << session[:deck].pop
 
     elsif cards_value(session[:player_cards]) > cards_value(session[:dealer_cards])
-      session[:state] = :player_wins
+      session[:state] = :player_win
       @alert_success = "You win!" + play_again
+
     elsif cards_value(session[:player_cards]) < cards_value(session[:dealer_cards])
-      session[:state] = :dealer_wins
+      session[:state] = :player_lost
       @alert_error = "Too bad, dealer wins!" + play_again
+
     else cards_value(session[:player_cards]) == cards_value(session[:dealer_cards])
-      session[:state] = :result_tie
+      session[:state] = :tie
       @alert_info = "Game ends in a tie! " + play_again
     end
 
     if session[:state] == :dealer && cards_value(session[:dealer_cards]) > 21
-      session[:state] = :dealer_busted
+      session[:state] = :player_win
       @alert_success = "Dealer busted! You win!" + play_again
     end
-
   end
 
-  if [:player_wins, :dealer_wins, :result_tie, :dealer_busted, :player_busted].include? session[:state]
-    if [:dealer_busted, :player_wins].include? session[:state]
+  if session[:player_bet] && [:player_win, :player_lost, :tie].include?(session[:state])
+    if session[:state] == :player_win
       session[:player_money] += (2*session[:player_bet])
-    elsif [:result_tie].include? session[:state]
+    elsif session[:state] == :tie
       session[:player_money] += session[:player_bet]
     end
 
     session[:player_bet] = nil
   end
 
-  erb :'game/display'
+  content_type :json
+  json_data = {:state => session[:state]}
+  json_data['error'] = @alert_error if @alert_error
+  json_data['info'] = @alert_info if @alert_info
+  json_data['success'] = @alert_success if @alert_success
+  json_data.to_json
+end
+
+get '/ajax/dealer_cards' do
+  erb :'ajax/dealer_cards', :layout => false
+end
+
+get '/ajax/player_cards' do
+  erb :'ajax/player_cards', :layout => false
 end

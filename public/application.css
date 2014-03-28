@@ -13,6 +13,13 @@ form#action_form input:first-child {
   margin-right:10px;
 }
 
-img.card {
-  margin-right:5px;
+div.cards {
+  height: 255px;
+}
+
+div.cards img.card {
+  width: 120px;
+  margin: 5px;
+  border: 1px solid #8F8D8D;
+  border-radius: 5px;
 }

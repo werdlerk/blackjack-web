@@ -1,0 +1,14 @@
+<div id="dealer_cards" class="well well-small text-center cards">
+  <h3 class="float-left">
+    Dealer
+  </h3>
+
+  <h3 class="float-right">
+     <%= has_hidden_card(session[:dealer_cards]) ? '' : cards_value(session[:dealer_cards]) %>
+  </h3>
+  <p>
+    <% session[:dealer_cards].each do |card| %>
+      <img class="card" src="<%= card_filename(card) %>" title="<%= card_title(card) %>" />
+    <% end %>
+  </p>
+</div>
