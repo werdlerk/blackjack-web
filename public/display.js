@@ -3,7 +3,7 @@ function renderPlayerCards() {
     type: 'GET',
     url: '/ajax/player_cards'
   }).done(function(data) {
-    $("#player_cards").replaceWith(data);
+    $("#player_cards").html(data);
   });
 }
 
@@ -12,7 +12,7 @@ function renderDealerCards() {
     type: 'GET',
     url: '/ajax/dealer_cards'
   }).done(function(data) {
-    $("#dealer_cards").replaceWith(data);
+    $("#dealer_cards").html(data);
   });
 }
 
