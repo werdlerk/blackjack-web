@@ -45,7 +45,7 @@ end
 
 get '/make_bet' do
   reset_round
-  if session[:player_money] > 0
+  if session[:player_money] && session[:player_money] > 0
     erb :'preparation/make_bet'
   else
     erb :'game/game_over'
